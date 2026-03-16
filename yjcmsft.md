@@ -11,3 +11,5 @@ J-browser-agents + security layer + MCP server + Copilot SDK = secure, enterpris
 
 RSAC 2024: "Building Secure AI Agents with J-browser-agents and GitHub Copilot SDK"
 
+### J-browser-agents + security layer + MCP server + Copilot SDK
+- [Secure Enterprise Browser Agentic System](https://github.com/yjcmsft/Secure-Enterprise-Browser-Agentic-System)
