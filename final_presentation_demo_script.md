@@ -347,3 +347,113 @@ If the live demo fails:
 | Container Apps replicas | 0–5 (scale-to-zero) |
 | Dockerfile stages | 2 (builder + runtime), runs as non-root user |
 | Docs | 18 files (architecture, setup, SDK feedback, multi-tenant strategy, lessons learned, etc.) |
+
+---
+
+## Portal Pain-Point Reference — What SecPostureIQ Replaces
+
+The core value proposition: **4 portals, 12+ sub-pages, ~1 hour of manual clicking → 1 sentence, 8 tools, under 3 minutes.**
+
+This section maps every Microsoft admin portal that an account team must manually visit today to the SecPostureIQ tool that replaces it.
+
+### Portal 1: Microsoft Secure Score
+
+| | |
+|---|---|
+| **Portal URL** | `security.microsoft.com/securescore` |
+| **What account teams do manually** | Open the Secure Score overview → read overall score → click into each category (Identity, Data, Device, Apps, Infrastructure) → read individual recommendations → note which ones apply to E5 licensing → export to spreadsheet |
+| **Time** | ~20 minutes per tenant |
+| **SecPostureIQ tool** | `query_secure_score` |
+| **What the tool returns** | Current score, category breakdown with current/max per category, 30-day trend (all 30 data points), industry comparison — in one response |
+| **Graph API endpoint** | `GET /security/secureScores` |
+
+### Portal 2: Microsoft Defender — Device Inventory
+
+| | |
+|---|---|
+| **Portal URL** | `security.microsoft.com/endpoints/device-inventory` |
+| **What account teams do manually** | Navigate to Defender > Endpoints > Device inventory → count onboarded vs total devices → calculate coverage percentage → note OS distribution and health status |
+| **Time** | ~10 minutes |
+| **SecPostureIQ tool** | `assess_defender_coverage` (Endpoint workload) |
+| **What the tool returns** | Onboarded device count vs total, coverage percentage, gap identification |
+
+### Portal 3: Microsoft Defender — Threat Policies (Office 365)
+
+| | |
+|---|---|
+| **Portal URL** | `security.microsoft.com/threatpolicy` |
+| **What account teams do manually** | Navigate to Policies > Threat policies → check Safe Links status → check Safe Attachments policies → check anti-phishing policies → check anti-spam → note which are active vs disabled |
+| **Time** | ~10 minutes |
+| **SecPostureIQ tool** | `assess_defender_coverage` (Office 365 workload) |
+| **What the tool returns** | Active/inactive policy counts per type, coverage gap list for Safe Links, Safe Attachments, anti-phishing |
+
+### Portal 4: Microsoft Defender — Identity & Cloud Apps
+
+| | |
+|---|---|
+| **Portal URLs** | `security.microsoft.com/identities` (sensors), `security.microsoft.com/cloudapps` (connected apps) |
+| **What account teams do manually** | Defender for Identity → check sensor health and deployment status. Defender for Cloud Apps → count connected apps, review policy alerts. Two separate navigation paths within the same portal. |
+| **Time** | ~10 minutes |
+| **SecPostureIQ tool** | `assess_defender_coverage` (Identity + Cloud Apps workloads) |
+| **What the tool returns** | Sensor health, connected app count, coverage percentage per workload — combined into a single response |
+
+### Portal 5: Microsoft Purview — DLP Policies
+
+| | |
+|---|---|
+| **Portal URL** | `compliance.microsoft.com/datalossprevention` |
+| **What account teams do manually** | Open Purview > Data loss prevention > Policies → count active vs test-only policies → note scope (Exchange, SharePoint, Teams, OneDrive, Endpoint DLP) → check if policies cover sensitive info types → check for custom policies |
+| **Time** | ~15 minutes |
+| **SecPostureIQ tool** | `check_purview_policies` (DLP section) |
+| **What the tool returns** | Policy count, active vs test-mode status, scope coverage, sensitive info type coverage |
+
+### Portal 6: Microsoft Purview — Sensitivity Labels & Retention
+
+| | |
+|---|---|
+| **Portal URLs** | `compliance.microsoft.com/informationprotection` (labels), `compliance.microsoft.com/recordsmanagement` (retention) |
+| **What account teams do manually** | Information Protection → check published sensitivity labels → check auto-labeling → check default labels. Records Management → check retention policies per workload (Exchange, SharePoint, OneDrive, Teams) → check retention labels. Insider Risk Management → check if enabled. |
+| **Time** | ~15 minutes |
+| **SecPostureIQ tool** | `check_purview_policies` (Labels + Retention + Insider Risk sections) |
+| **What the tool returns** | Published label count, auto-labeling status, retention policy coverage by workload, Insider Risk Management status — all in one response |
+
+### Portal 7: Microsoft Entra — Conditional Access
+
+| | |
+|---|---|
+| **Portal URL** | `entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess` |
+| **What account teams do manually** | Entra > Protection > Conditional Access → count policies → categorize: enforced vs report-only vs disabled → check for MFA policies → check for device compliance policies → check named locations → check session controls |
+| **Time** | ~15 minutes |
+| **SecPostureIQ tool** | `get_entra_config` (Conditional Access section) |
+| **What the tool returns** | Policy count, enforcement status breakdown, MFA coverage, device compliance requirements, gap identification |
+
+### Portal 8: Microsoft Entra — PIM & Identity Protection
+
+| | |
+|---|---|
+| **Portal URLs** | `entra.microsoft.com/#view/Microsoft_Azure_PIMCommon` (PIM), `entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade` (Identity Protection) |
+| **What account teams do manually** | PIM → count active vs eligible role assignments → check for Global Admin over-provisioning → review access review config. Identity Protection → check user risk policy → check sign-in risk policy → review risky users/sign-ins. |
+| **Time** | ~15 minutes |
+| **SecPostureIQ tool** | `get_entra_config` (PIM + Identity Protection sections) |
+| **What the tool returns** | Active vs eligible assignments, over-privileged role alerts, risk policy status, access review configuration. Note: PIM data requires admin-level delegated permissions — the agent transparently flags this limitation. |
+
+### Summary: The Before/After
+
+| Manual Process | SecPostureIQ |
+|---|---|
+| 4 portals | 1 chat interface |
+| 8+ portal URLs to navigate | 1 sentence: "Run a full assessment" |
+| 12+ sub-pages to click through | 8 tools auto-chained by the agent |
+| ~60–90 minutes to collect raw data | Under 3 minutes |
+| Copy-paste into Word/Excel | Structured markdown with emoji status |
+| No PowerShell scripts | Executable remediation scripts included |
+| Manual prioritization | AI-prioritized P0/P1/P2 with effort estimates |
+| Repeat for every customer | Same conversation, any tenant |
+
+### Demo Tips for ACT 1b
+
+- **Speed over detail**: Flip through tabs briskly (~15 sec each). The point is the *volume* of context-switching, not reading every field.
+- **Narrate the friction**: "This is portal number three... and we're only halfway through." Count out loud.
+- **Don't minimize the tabs beforehand**: Keep all 7 visible in the tab bar so the audience sees the wall of tabs.
+- **The close gesture**: When transitioning to ACT 3, dramatically close all portal tabs one by one (or Ctrl+W rapidly) and say "Now let me show you one sentence that replaces all of that."
+- **Fallback if portals are slow**: Have screenshots of each portal page ready — same visual impact without the load-time risk.
