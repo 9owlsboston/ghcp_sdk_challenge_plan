@@ -8,6 +8,14 @@
 
 ## Pre-Presentation Checklist
 
+- [ ] **Portal tabs pre-loaded (for pain-point demo):**
+  - [ ] Tab 1: Microsoft 365 Security — Secure Score page (`security.microsoft.com/securescore`)
+  - [ ] Tab 2: Microsoft 365 Defender — Endpoints > Device inventory (`security.microsoft.com/endpoints/device-inventory`)
+  - [ ] Tab 3: Microsoft 365 Defender — Policies > Safe Links or Safe Attachments (`security.microsoft.com/threatpolicy`)
+  - [ ] Tab 4: Microsoft Purview — DLP Policies (`compliance.microsoft.com/datalossprevention`)
+  - [ ] Tab 5: Microsoft Purview — Sensitivity Labels (`compliance.microsoft.com/informationprotection`)
+  - [ ] Tab 6: Microsoft Entra — Conditional Access (`entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess`)
+  - [ ] Tab 7: Microsoft Entra — PIM (`entra.microsoft.com/#view/Microsoft_Azure_PIMCommon`)
 - [ ] Web chat UI running locally or on Container Apps (`http://localhost:8000`)
 - [ ] Real M365 tenant connected (or mock data if needed — know which mode you're in)
 - [ ] App Insights dashboard open in a browser tab (pre-loaded with traffic simulator data)
@@ -40,7 +48,47 @@
 
 ---
 
-### ACT 2: ARCHITECTURE (3 minutes) — ?
+### ACT 1b: THE PAIN — LIVE PORTAL WALKTHROUGH (2 minutes) — Velen
+
+> "Don't take my word for it — let me show you what that manual process actually looks like."
+
+**[Browser is pre-loaded with 7 portal tabs. Flip through them briskly — spend ~15 seconds per portal group. The point is the sheer volume of context-switching, not reading every detail.]**
+
+#### Portal 1: Microsoft Secure Score (security.microsoft.com/securescore)
+
+**[Click tab — show the Secure Score overview page]**
+
+> "Portal number one. This is Secure Score. You can see the number and the category breakdown — Identity, Data, Device, Apps, Infrastructure. But to understand what's actually dragging the score down, you have to click into each category, read each recommendation, figure out which ones matter for this customer's E5 licensing. Just this page — maybe 20 minutes if you're thorough."
+
+#### Portal 2–3: Microsoft Defender (security.microsoft.com)
+
+**[Click tab — show Defender device inventory, then click to threat policies]**
+
+> "Portal two — still security.microsoft.com but now we're in Defender. Device inventory — how many endpoints are onboarded? Are we at 100% or 60%? Then Safe Links, Safe Attachments, anti-phishing policies — different sub-page. Then Defender for Identity — separate section, check sensor health. Defender for Cloud Apps — another page, connected apps count. Four workloads, four different navigation paths, all under 'Defender' but none in a single view."
+
+#### Portal 4–5: Microsoft Purview (compliance.microsoft.com)
+
+**[Click tab — show DLP policies page, then sensitivity labels page]**
+
+> "Portal three — compliance.microsoft.com. Now we're in Purview. DLP policies — how many are active vs test-only? Sensitivity labels — are they published? Auto-labeling configured? Retention policies — yet another sub-page for Exchange, SharePoint, OneDrive, Teams. Each one is a separate click, separate table, separate filter."
+
+#### Portal 6–7: Microsoft Entra (entra.microsoft.com)
+
+**[Click tab — show Conditional Access policies list, then PIM]**
+
+> "Portal four — entra.microsoft.com. Conditional Access — how many policies? Which ones are in report-only vs enforced? Then PIM — active vs eligible role assignments. Identity Protection risk policies. Access Reviews. Each a separate blade.
+>
+> **That's 4 portals, at least 12 sub-pages, and about an hour just to collect the raw data — before you even start writing the assessment.** And you have to do this for every customer."
+
+**[Pause. Gesture at all the open tabs.]**
+
+> "Now let me show you what happens when I ask SecPostureIQ the same thing in one sentence."
+
+**[Transition to ACT 3 — live demo]**
+
+---
+
+### ACT 2: ARCHITECTURE (2 minutes) — ?
 
 **[Slide: Architecture Diagram — show the Mermaid diagram from docs/architecture.md]**
 
@@ -48,46 +96,35 @@
 >
 > **[Point to the diagram]**
 >
-> SecPostureIQ is built on the **GitHub Copilot SDK** — specifically, it uses `CopilotClient`, `CopilotSession`, and the `Tool` registration API. The SDK is the thin client. The **Agent Runtime** — the Copilot CLI binary — is the brain. It handles planning, tool orchestration, multi-model routing, and context management.
+> SecPostureIQ is built on the **GitHub Copilot SDK** — `CopilotClient`, `CopilotSession`, and the `Tool` registration API. The SDK is the thin client. The **Agent Runtime** — the Copilot CLI binary — is the brain. Planning, tool orchestration, multi-model routing, context management.
 >
-> We register **8 tools** with the runtime:
-> - 4 **assessment tools**: Secure Score, Defender Coverage, Purview Policies, Entra Config — all querying **Microsoft Graph Security API**
-> - 1 **remediation tool**: Uses **Azure OpenAI GPT-4o** to generate prioritized plans with PowerShell scripts
-> - 1 **scorecard tool**: Aggregates everything into an executive RED/YELLOW/GREEN dashboard
-> - 1 **Foundry IQ tool**: Retrieves Project 479 playbooks and recommended offers
-> - 1 **Fabric tool**: Pushes posture snapshots to a lakehouse for longitudinal trend analysis
+> **8 registered tools** — the same ones that replace those 4 portals and 12 sub-pages you just saw:
+> - 4 **assessment tools**: Secure Score, Defender Coverage, Purview Policies, Entra Config — all hitting **Microsoft Graph Security API**. One tool per portal.
+> - 1 **remediation tool**: **Azure OpenAI GPT-4o** generates prioritized plans with PowerShell scripts
+> - 1 **scorecard tool**: RED/YELLOW/GREEN executive dashboard
+> - 1 **Foundry IQ** + 1 **Fabric** tool for playbooks and longitudinal trends
 >
-> **[Point to middleware layer]**
+> **[Point to middleware layer]** — 4 middleware layers on every request: Content Safety, PII Redaction, Distributed Tracing (App Insights), Immutable Audit Logger.
 >
-> Every request passes through 4 middleware layers:
-> - **Azure AI Content Safety** — screens inputs for prompt injection and outputs for harmful content
-> - **PII Redaction** — strips tenant IDs, emails, UPNs, IPs before data reaches the LLM
-> - **Distributed Tracing** — OpenTelemetry spans for every tool call, integrated with **Azure Application Insights**
-> - **Immutable Audit Logger** — every agent action logged with user identity, tool called, and redacted I/O
+> **[Point to Azure services]** — Container Apps (scale-to-zero), Key Vault (Managed Identity), ACR, Bicep IaC — one `azd up` provisions everything. **688 tests**, **3 CI/CD workflows**, Trivy scanning, OIDC federation — zero stored secrets.
 >
-> **[Point to Azure services]**
+> **Two parallel interfaces** sharing the same tool layer:
+> - **Copilot SDK CLI** (`CopilotClient` + `Tool` registration) — pure SDK integration
+> - **FastAPI Web App** with 3 chat modes (keyword, LLM SSE streaming, Chainlit UI) — Azure OpenAI function calling
 >
-> The infrastructure: **Azure Container Apps** for deployment (scale-to-zero), **Azure Key Vault** for secrets (Managed Identity, no API keys), **Azure Container Registry** for CI/CD, and **Bicep IaC** for the entire stack — one `azd up` provisions everything.
->
-> We have **688 tests** — 687 unit and 1 integration e2e smoke — running in **3 GitHub Actions workflows** with **OIDC federation** authentication. Plus Trivy container vulnerability scanning. No stored secrets anywhere.
->
-> One more architectural point — we built **two fully parallel interfaces** with the same tool parity:
-> - The **Copilot SDK CLI agent** (`src/agent/main.py`) — uses `CopilotClient`, `Tool` registration, and the agent runtime for planning. This is the pure Copilot SDK integration.
-> - The **FastAPI Web App** with 3 chat modes: keyword-based (`/chat`), LLM-powered SSE streaming (`/chat/stream`), and **Chainlit conversational UI** (`/chat-ui`). Both the SSE streaming and Chainlit modes use Azure OpenAI function calling with the same shared `TOOL_SCHEMAS` and `_run_tool()` dispatcher.
->
-> Both interfaces share the **same 8 tools, same system prompt, same middleware stack, and same tool schemas** via `src/tools/definitions.py`. Adding a tool to one automatically makes it available to the other."
+> Same 8 tools, same system prompt, same middleware, same schemas via `src/tools/definitions.py`."
 
 ---
 
-### ACT 3: LIVE DEMO — FULL ASSESSMENT (8 minutes) - ? drives, ? narrates
+### ACT 3: LIVE DEMO — FULL ASSESSMENT (7 minutes) - ? drives, ? narrates
 
 **[Switch to browser — SecPostureIQ web chat UI]**
 
-#### 3a. The UI (30 seconds) — ?
+#### 3a. The Contrast (30 seconds) — Velen
 
-> "This is the SecPostureIQ web interface. On the left, you can see the available tools. On the right, we have quick-action buttons for common queries. Let me show you what this agent can do."
+> "Remember those 7 portal tabs? I'm closing all of them. **[Close the portal tabs dramatically.]** From here on, everything comes from one conversation."
 
-**[Point out the sidebar showing all 8 tools listed]**
+**[Point to the SecPostureIQ chat UI]**
 
 #### 3b. Single Tool — Secure Score (1.5 minutes) — ? types, ? narrates
 
@@ -267,8 +304,9 @@
 | Segment | Duration | Cumulative | Speaker |
 |---------|----------|------------|---------|
 | ACT 1: The Hook | 2:00 | 2:00 | Velen |
-| ACT 2: Architecture | 3:00 | 5:00 | Ying-Jung |
-| ACT 3: Live Demo | 8:00 | 13:00 | Both |
+| ACT 1b: The Pain — Portal Walkthrough | 2:00 | 4:00 | Velen |
+| ACT 2: Architecture | 2:00 | 6:00 | Ying-Jung |
+| ACT 3: Live Demo | 7:00 | 13:00 | Both |
 | ACT 4: Ops Depth | 3:00 | 16:00 | Ying-Jung |
 | ACT 5: Security & RAI | 2:00 | 18:00 | Ying-Jung |
 | ACT 6: The Close | 2:00 | 20:00 | Velen |
