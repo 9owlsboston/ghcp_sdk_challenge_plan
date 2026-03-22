@@ -9,7 +9,7 @@
 
 ### Q: Who is the enterprise buyer/user and what measurable pain is solved?
 
-**ANSWER (Velen — business context):**
+**ANSWER (Velen / YJ — business context):**
 
 > "The primary users are **Microsoft ME5 account teams** — the specialists and customer success managers running **Project 479**, our internal 'Get to Green' campaign that covers thousands of M365 E5 accounts.
 >
@@ -30,7 +30,7 @@
 
 ### Q: How does this reuse across multiple enterprises with different stacks?
 
-**ANSWER (Ying-Jung — technical reusability):**
+**ANSWER (Velen / YJ — technical reusability):**
 
 > "Every single enterprise that has M365 E5 licensing has the same security surface: Microsoft Secure Score, Defender XDR across four workloads, Purview Information Protection, and Entra ID P2. These aren't custom integrations — they're **standard Microsoft Graph API endpoints** that exist in every M365 E5 tenant.
 >
@@ -44,7 +44,7 @@
 
 ### Q: What is the ROI story (speed, quality, risk reduction) and proof?
 
-**ANSWER (Velen):**
+**ANSWER (Velen / YJ):**
 
 > "Three dimensions of ROI:
 >
@@ -60,7 +60,7 @@
 
 ### Q: What constraints (data, approvals, environments) could block adoption — and how are they addressed?
 
-**ANSWER (Ying-Jung):**
+**ANSWER (Velen / YJ):**
 
 > "The main constraint is **Graph API admin consent** — a tenant admin must grant the app registration five read-only permissions: SecurityEvents.Read.All, SecurityActions.Read.All, InformationProtection.Read.All, Policy.Read.All, and Reports.Read.All.
 >
@@ -77,7 +77,7 @@
 
 ### Q: Which Microsoft services are integrated — and why they are essential?
 
-**ANSWER (Velen — architecture walkthrough):**
+**ANSWER (Velen / YJ — architecture walkthrough):**
 
 > "We integrate **9 Azure and Microsoft services**, and every one of them is load-bearing — not decorative:
 >
@@ -95,7 +95,7 @@
 
 ### Q: What is the minimum integration path to still deliver value?
 
-**ANSWER (Ying-Jung):**
+**ANSWER (Velen / YJ):**
 
 > "The absolute minimum is: **Graph Security API + Azure OpenAI + Entra ID**. That gives you the assessment tools, the reasoning for remediation plans, and the auth to access tenant data.
 >
@@ -107,7 +107,7 @@
 
 ### Q: How does the solution degrade gracefully when integrations fail?
 
-**ANSWER (Velen):**
+**ANSWER (Velen / YJ):**
 
 > "We designed explicit fallback paths for every integration:
 >
@@ -121,7 +121,7 @@
 
 ### Q: Can integrations be swapped/extended without rewriting core logic?
 
-**ANSWER (Ying-Jung):**
+**ANSWER (Velen / YJ):**
 
 > "Yes — this was a deliberate architectural decision. The tool system is **completely modular**:
 >
@@ -139,7 +139,7 @@
 
 ### Q: Deployment model fits enterprise needs?
 
-**ANSWER (Velen):**
+**ANSWER (Velen / YJ):**
 
 > "We deploy to **Azure Container Apps** — which is purpose-built for enterprise containerized workloads:
 >
@@ -155,7 +155,7 @@
 
 ### Q: Defined SLOs, scale assumptions, and performance targets?
 
-**ANSWER (Ying-Jung):**
+**ANSWER (Velen / YJ):**
 
 > "Our performance targets based on testing:
 >
@@ -171,7 +171,7 @@
 
 ### Q: Observability: logs, traces, metrics, audit trails — what does on-call check first?
 
-**ANSWER (Velen):**
+**ANSWER (Velen / YJ):**
 
 > "On-call checks the **App Insights dashboard** — here's the stack:
 >
@@ -189,7 +189,7 @@
 
 ### Q: CI/CD maturity: tests, promotions, secrets, rollback strategy?
 
-**ANSWER (Ying-Jung):**
+**ANSWER (Velen / YJ):**
 
 > "Our CI/CD pipeline is in GitHub Actions with **OIDC federation** — no stored secrets:
 >
@@ -209,7 +209,7 @@
 
 ### Q: Data handling: least privilege, minimization, retention, isolation?
 
-**ANSWER (Ying-Jung):**
+**ANSWER (Velen / YJ):**
 
 > "Every design choice was least-privilege-first:
 >
@@ -222,7 +222,7 @@
 
 ### Q: Identity & auth model (users, apps, service principals, tool boundaries)?
 
-**ANSWER (Velen):**
+**ANSWER (Velen / YJ):**
 
 > "Three authentication layers:
 >
@@ -240,7 +240,7 @@
 
 ### Q: Threats addressed (prompt injection, exfiltration, unsafe automation)?
 
-**ANSWER (Ying-Jung):**
+**ANSWER (Velen / YJ):**
 
 > "We address the three big agent threats:
 >
@@ -256,7 +256,7 @@
 
 ### Q: Governance controls: policy, approvals, auditability, and admin controls?
 
-**ANSWER (Velen):**
+**ANSWER (Velen / YJ):**
 
 > "Four governance layers:
 >
@@ -274,7 +274,7 @@
 
 ### Q: Responsible AI: grounding, transparency, human-in-loop, limitations?
 
-**ANSWER (Ying-Jung):**
+**ANSWER (Velen / YJ):**
 
 > "Our RAI posture:
 >
@@ -292,7 +292,7 @@
 
 ### Q: Agent loop design (planning, tool choice, execution, reflection).
 
-**ANSWER (Ying-Jung — Stanford AI agent research credibility):**
+**ANSWER (Velen / YJ — agent design):**
 
 > "The architecture leverages the Copilot SDK's agentic runtime for planning and tool orchestration:
 >
@@ -314,7 +314,7 @@
 
 ### Q: Grounding strategy (retrieval, structured context, and tool outputs).
 
-**ANSWER (Velen):**
+**ANSWER (Velen / YJ):**
 
 > "Our grounding is **entirely structured data from authoritative sources**:
 >
@@ -332,7 +332,7 @@
 
 ### Q: Safe tool boundaries and policy-aware actions?
 
-**ANSWER (Ying-Jung):**
+**ANSWER (Velen / YJ):**
 
 > "Every tool has explicit safety boundaries:
 >
@@ -348,7 +348,7 @@
 
 ### Q: Enterprise configurability via AGENTS.md / instructions (not hard-coded)?
 
-**ANSWER (Velen):**
+**ANSWER (Velen / YJ):**
 
 > "The agent's behavior is **configuration-driven, not hard-coded**:
 >
@@ -364,7 +364,7 @@
 
 ### Q: Quality evaluation over time (golden paths, tests, monitoring)?
 
-**ANSWER (Ying-Jung):**
+**ANSWER (Velen / YJ):**
 
 > "Three layers of quality evaluation:
 >
