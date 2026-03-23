@@ -45,6 +45,8 @@
 >
 > But nobody checked whether they actually *turned it on*.
 >
+> Internal telemetry shows over **400,000 tenants** in the E5 family. Even conservatively, **tens of thousands** are on the full M365 E5 suite. Each one has the same security surface. Each one needs a posture assessment.
+>
 > Your job: assess their security posture, find the gaps, and get them to green before renewal. You have dozens of accounts. Renewal deadline is approaching.
 >
 > **Where do you even start?**"
@@ -227,6 +229,8 @@
 >
 > **The problem**: Project 479 covers thousands of ME5 accounts. Manual posture assessment takes 1–2 weeks per customer.
 >
+> **The math**: At 40 hours per manual assessment, even 1,000 accounts is **40,000 man-hours**. Internal telemetry shows over 400,000 E5-category tenants — tens of thousands on full M365 E5. The manual approach doesn't scale. It never could.
+>
 > **The transformation**: SecPostureIQ does it in under 3 minutes. One conversation. Personalized remediation with executable scripts. A scorecard ready for the executive report.
 >
 > But this isn't just an internal tool. Every M365 E5 customer on the planet has the same security surface — Secure Score, Defender, Purview, Entra. The agent is **multi-tenant by design**. One admin consent click and it works for any enterprise.
@@ -251,6 +255,8 @@
 > **[Final slide: One sentence, large type]**
 >
 > *'We turned a two-week assessment into a three-minute conversation — and made it safe, auditable, and ready to deploy.'*
+>
+> *'For the E5 footprint alone, that's tens of thousands of hours given back to account teams — every cycle.'*
 >
 > Thank you."
 
@@ -336,6 +342,9 @@ If the live demo fails:
 | API endpoints | 14 (`/`, `/chat`, `/chat/stream`, `/health`, `/ready`, `/version`, `/auth/login`, `/auth/callback`, `/auth/me`, `/auth/revoke-consent`, `/config`, `/assess`, `/audit/logs`, `/chat-ui`) |
 | Chat interfaces | 3 (keyword `/chat`, LLM streaming `/chat/stream`, Chainlit `/chat-ui`) |
 | Assessment time | Under 3 minutes (vs 1–2 weeks manual) |
+| Man-hours saved per 1K assessments | ~40,000 hours (at 40 hrs/manual assessment) |
+| E5-category tenants (internal telemetry) | ~412K (non-test, directional) |
+| ME5 tenants in ACR (lower bound) | ~17,700 (from subscription snapshot) |
 | Graph API permissions | 5 (all read-only) |
 | Middleware layers | 4 (Content Safety, PII, Tracing, Audit) |
 | Container Apps replicas | 0–5 (scale-to-zero) |
