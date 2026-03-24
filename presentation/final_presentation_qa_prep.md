@@ -32,7 +32,7 @@
 
 **ANSWER (Velen / YJ — technical reusability):**
 
-> "Every single enterprise that has M365 E5 licensing has the same security surface: Microsoft Secure Score, Defender XDR across four workloads, Purview Information Protection, and Entra ID P2. These aren't custom integrations — they're **standard Microsoft Graph API endpoints** that exist in every M365 E5 tenant.
+> "Every single enterprise that has M365 E5 licensing has the same security surface: Microsoft Secure Score, Defender XDR across four workloads (endpoints, identities, email & collaboration, and Cloud Apps (SaaS), Purview Information Protection, and Entra ID P2. These aren't custom integrations — they're **standard Microsoft Graph API endpoints** that exist in every M365 E5 tenant.
 >
 > The agent is **tenant-agnostic by design**. We built multi-tenant support with Entra ID app registration using `AzureADMultipleOrgs` — any tenant's admin grants consent once, and the agent assesses their environment using **delegated permissions** scoped to that user's access level.
 >
