@@ -1,0 +1,49 @@
+%%{ init: { "theme": "default", "flowchart": { "subGraphTitleMargin": { "top": 10, "bottom": 10 } } } }%%
+
+flowchart TD
+    subgraph UI["User Interfaces"]
+        CLI["CLI · Copilot SDK"]
+        WEB["Web Chat · Chainlit + Entra ID"]
+    end
+
+    subgraph SDK["Copilot SDK → Agent Runtime"]
+        sdk_pad[" "]:::hidden
+        SP["System Prompt + 8 Registered Tools"]
+    end
+
+    UI --> SDK
+
+    subgraph ASSESS["Assessment Tools · Graph API"]
+        assess_pad[" "]:::hidden
+        SS["query_secure_score"]
+        DC["assess_defender_coverage"]
+        PP["check_purview_policies"]
+        EC["get_entra_config"]
+    end
+
+    subgraph AITOOLS["AI-Powered Tools"]
+        ai_pad[" "]:::hidden
+        RP["generate_remediation_plan"]
+        SC["create_adoption_scorecard"]
+        GP["get_green_playbook"]
+        FP["push_posture_snapshot"]
+    end
+
+    subgraph MW["Middleware Layers"]
+        mw_pad[" "]:::hidden
+        CS["Content Safety"]
+        PII["PII Redaction"]
+        AT["Audit Trail"]
+        TR["Tracing · OpenTelemetry"]
+    end
+
+    SDK --> ASSESS
+    SDK --> AITOOLS
+    SDK --> MW
+
+    ASSESS -->|"Read-only · 5 permissions"| GRAPH["Microsoft Graph Security API"]
+    RP -->|"GPT-4o / GPT-4o-mini"| AOAI["Azure OpenAI"]
+    GP -->|"Playbooks"| FIQ["Foundry IQ"]
+    FP -->|"Snapshots"| FAB["Fabric Lakehouse"]
+
+    classDef hidden fill:none,stroke:none,color:transparent,font-size:1px
