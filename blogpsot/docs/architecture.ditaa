@@ -1,0 +1,29 @@
++--------------------------------------------------------+
+|                    User Interfaces                     |
+|       CLI (Copilot SDK)     Web Chat (Chainlit)        |
++----------------------------+---------------------------+
+                             |
+                             v
++----------------------------+---------------------------+
+|            Copilot SDK Agent Runtime (CLI)             |
+|          System Prompt and 8 Registered Tools          |
++-------+--------------------+--------------------+------+
+        |                    |                    |
+        v                    v                    v
++----------------+   +----------------+   +----------------+
+|   Middleware   |   |   Assessment   |   |   AI Powered   |
+|     Layers     |   |     Tools      |   |     Tools      |
++----------------+   +----------------+   +----------------+
+|Content Safety  |   |Secure Score    |   |Remediation     |
+|PII Redaction   |   |Defender        |   |Scorecard       |
+|Audit Trail     |   |Purview         |   |Foundry IQ      |
+|Tracing         |   |Entra           |   |Fabric Push     |
++----------------+   +----------------+   +----------------+
+                             |                    |
+                             v                    v
+                    +----------------+   +----------------+
+                    |   Graph API    |   |  Azure OpenAI  |
+                    |      {io}      |   |   Foundry IQ   |
+                    +----------------+   |     Fabric     |
+                                         |      {io}      |
+                                         +----------------+
